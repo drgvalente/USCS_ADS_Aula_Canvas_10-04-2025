@@ -14,6 +14,21 @@ let speed2 = 5;
 let speedX2 = speed2*2*Math.cos(ang2);
 let speedY2 = speed2*2*Math.sin(ang2);
 
+let player = new Image();
+player.src = "airplane.png";
+
+let background = new Image();
+background.src = "background.png";
+
+let bgY = 0;
+let bgW = canvas.width;
+let bgH = canvas.height;
+let playerSpeed = 1;
+let pX = 400;
+let pY = 500;
+let pW = 100;
+let pH = 100;
+
 function desenha()
 {
     ctx.clearRect(0, 0, 600, 400);
@@ -47,4 +62,53 @@ function desenha()
     ctx.fill();
 }
 
-setInterval(desenha, 1000/60);
+canvas.addEventListener(
+    "mousemove",
+    function(event)
+    {
+        let rect = canvas.getBoundingClientRect();
+        let cX = event.clientX - rect.left;
+        let cY = event.clientY - rect.top;
+        //console.log("Coords: " + cX + ", " + cY);
+
+        pX = cX - pW/2;
+        //pY = cY - pH/2;
+    }    
+);
+
+canvas.addEventListener(
+    "click",
+    function(event)
+    {
+        console.log("atirou");
+    }
+);
+
+function jogar()
+{
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    bgY += playerSpeed;
+    if(bgY >= bgH)
+    {
+        bgY -= bgH;
+    }
+
+    ctx.drawImage(background, 0, bgY, bgW, bgH);
+    ctx.drawImage(background, 0, bgY - bgH, bgW, bgH);
+
+    ctx.drawImage(player, pX, pY, pW, pH);
+}   
+
+setInterval(jogar, 1000/60);
+
+function jogarLateral()
+{
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    bgY -= playerSpeed;
+    if(bgY <= -bgW)
+    {
+        bgY += bgW;
+    }
+    ctx.drawImage(background, bgY, 0, bgW, bgH);
+    ctx.drawImage(background, bgY + bgW, 0, bgW, bgH);
+}   
