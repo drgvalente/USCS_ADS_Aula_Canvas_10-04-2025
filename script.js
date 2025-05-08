@@ -29,6 +29,22 @@ let pY = 500;
 let pW = 100;
 let pH = 100;
 
+let bullet = new Image();
+bullet.src = "new_bullet.png";
+
+let bW = 16;
+let bH = 16;
+let bSpeed = 5;
+let bullets = [[400, 400], [400,-100], [400, -100]];
+
+let enemy = new Image();
+enemy.src = "balloon_red.png";
+
+let eW = 40;
+let eH = 60;
+let eSpeed = 2;
+let enemies = [[200, 100, eSpeed]];
+
 function desenha()
 {
     ctx.clearRect(0, 0, 600, 400);
@@ -80,9 +96,53 @@ canvas.addEventListener(
     "click",
     function(event)
     {
-        console.log("atirou");
+        //console.log("atirou");
+        for(let i = 0; i < bullets.length; i++)
+        {
+            //if (bullets[i][0] > 900) // lateral)
+            if (bullets[i][1] < -100) 
+            {
+                bullets[i][0] = pX + pW/2;
+                bullets[i][1] = pY;
+                //bullets[i][1] = pY + pH/2;
+                break;
+            }
+        }
     }
 );
+
+function drawBullets()
+{
+    for (let i = 0; i < bullets.length; i++)
+    {
+        bullets[i][1] -= bSpeed;
+        //bullets[i][0] += bSpeed; // LATERAL
+        ctx.beginPath();
+        ctx.drawImage(
+            bullet,
+            bullets[i][0],
+            bullets[i][1],
+            bW,
+            bH           
+        );
+    }
+}
+
+function drawEnemies()
+{
+    for (let i = 0; i < enemies.length; i++)
+    {
+        enemies[i][0] -= enemies[i][2];
+        ctx.beginPath();
+        ctx.drawImage(
+            enemy,
+            enemies[i][0],
+            enemies[i][1],
+            eW,
+            eH
+        );
+    }
+}
 
 function jogar()
 {
@@ -97,6 +157,9 @@ function jogar()
     ctx.drawImage(background, 0, bgY - bgH, bgW, bgH);
 
     ctx.drawImage(player, pX, pY, pW, pH);
+
+    drawBullets();
+    drawEnemies();
 }   
 
 setInterval(jogar, 1000/60);
