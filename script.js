@@ -34,16 +34,20 @@ bullet.src = "new_bullet.png";
 
 let bW = 16;
 let bH = 16;
+let bRadius = bW/2;
 let bSpeed = 5;
-let bullets = [[400, 400], [400,-100], [400, -100]];
+let bullets = [ [400, 400], [400,-100], [400, -100]];
 
 let enemy = new Image();
 enemy.src = "balloon_red.png";
 
 let eW = 40;
 let eH = 60;
+let eRadius = eW/2;
 let eSpeed = 2;
-let enemies = [[200, 100, eSpeed]];
+let enemies = [[400, 100, eSpeed]];
+let eSpawnCD = 3000;
+let eSpawnTimer = 0;
 
 function desenha()
 {
@@ -141,6 +145,55 @@ function drawEnemies()
             eW,
             eH
         );
+        if (enemies[i][0] < -100 || enemies[i][0] > 900)
+        {
+
+        }
+    }
+}
+
+function detectCollision()
+{
+    for (let i = 0; i < bullets.length; i++)
+    {
+        for (let j = 0; j < enemies.length; j++)
+        {
+            if (testCollision(bullets[i], enemies[j]))
+            {
+                bullets[i][1] = -500;
+                enemies.splice(j, 1);
+            }
+        }
+    }
+}
+
+function testCollision(b, e)
+{
+    let dist = Math.sqrt(
+        ((b[0]-e[0])**2) + 
+        ((b[1]-e[1])**2)
+    );
+    if (bRadius+eRadius > dist)
+    {
+        return true;
+    }
+    else
+    {
+        return false
+    }
+}
+
+function spawnEnemy()
+{
+    eSpawnTimer += 1000/60;
+    if (eSpawnTimer >= eSpawnCD)
+    {
+        eSpawnTimer = 0;
+        let x = Math.random() * canvas.width;
+        let y = Math.random() * 100 + 50;
+        let s = (Math.random() * eSpeed * 2) - eSpeed;
+        let e = [x, y, s];
+        enemies.push(e);
     }
 }
 
@@ -160,6 +213,8 @@ function jogar()
 
     drawBullets();
     drawEnemies();
+    detectCollision();
+    spawnEnemy();
 }   
 
 setInterval(jogar, 1000/60);
