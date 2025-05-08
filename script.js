@@ -193,7 +193,7 @@ function spawnEnemy()
         let y = Math.random() * 100 + 50;
         let s = (Math.random() * eSpeed * 2) - eSpeed;
         let e = [x, y, s];
-        enemies.push(e);
+        enemies.push(e); 
     }
 }
 
